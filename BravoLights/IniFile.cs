@@ -10,7 +10,7 @@ namespace BravoLights
         private Dictionary<string, IniSection> sections = new();
 
         private static readonly Regex sectionRegex = new("\\[(.*)\\]");
-        private static readonly Regex keyValueRegex = new("^(.*?)\\s*=\\s*(.*)$");
+        private static readonly Regex keyValueRegex = new("^(.*?)\\s*([+|&]?=)\\s*(.*)$");
 
         public void LoadConfigFromFile(string filename)
         {
@@ -30,8 +30,7 @@ namespace BravoLights
             ICollection<IniSection> newSections = new List<IniSection>();
 
             var sections = new Dictionary<string, IniSection>();
-
-            var continuation = "";
+            IniSection defaultSection = null;
 
             foreach (var rawLine in configLines)
             {
@@ -42,16 +41,6 @@ namespace BravoLights
                     // Comment
                     continue;
                 }
-
-                if (line.EndsWith("\\"))
-                {
-                    // Line has continuation marker, to join it to the next line
-                    var trimmedLineWithoutMarker = line.Substring(0, line.Length - 1).Trim();
-                    continuation = (continuation + " " + trimmedLineWithoutMarker).Trim();
-                    continue;
-                }
-
-                line = (continuation + " " + line).Trim();
 
                 if (line.Length == 0)
                 {
@@ -73,6 +62,8 @@ namespace BravoLights
                         {
                             section = new IniSection();
                             sections[trimmedSectionName] = section;
+                            if (trimmedSectionName == "Default")
+                                defaultSection = section;
                         }
                         newSections.Add(section);
                     }
@@ -84,10 +75,29 @@ namespace BravoLights
                 if (keyValueMatch.Success)
                 {
                     var key = keyValueMatch.Groups[1].Value;
-                    var value = keyValueMatch.Groups[2].Value;
+                    var op = keyValueMatch.Groups[2].Value;
+                    var value = keyValueMatch.Groups[3].Value;
                     foreach (var section in newSections)
                     {
-                        section.Set(key, value);
+                        if (op != "=" &&
+                            defaultSection != null && section != defaultSection &&
+                            defaultSection.TryGetValue(key, out string defaultValue))
+                        {
+                            switch(op)
+                            {
+                                case "&=":
+                                    section.Set(key, $"{defaultValue} AND {value}");
+                                    break;
+                                case "|=":
+                                case "+=":
+                                    section.Set(key, $"{defaultValue} OR {value}");
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            section.Set(key, value);
+                        }
                     }
                 }
             }

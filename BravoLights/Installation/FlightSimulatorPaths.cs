@@ -8,17 +8,17 @@ namespace BravoLights.Installation
     static class FlightSimulatorPaths
     {
         /// <summary>
-        /// Gets the location of the main Flight Simulator installation.
+        /// Gets the location of the main Flight Simulator 2024 installation.
         /// </summary>
         public static string FlightSimulatorPath
         {
             get
             {
                 var localAppData = (UnitTestRoot == null) ? Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) : Path.Join(UnitTestRoot, "LOCALAPPDATA");
-                var windowsStoreLocation = Path.Join(localAppData, "Packages", "Microsoft.FlightSimulator_8wekyb3d8bbwe", "LocalCache");
+                var windowsStoreLocation = Path.Join(localAppData, "Packages", "Microsoft.Limitless_8wekyb3d8bbwe", "LocalCache");
 
                 var appData = (UnitTestRoot == null) ? Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) : Path.Join(UnitTestRoot, "APPDATA");
-                var steamLocation = Path.Join(appData, "Microsoft Flight Simulator");
+                var steamLocation = Path.Join(appData, "Microsoft Flight Simulator 2024");
 
                 var pathsToTry = new[]
                 {
@@ -28,14 +28,14 @@ namespace BravoLights.Installation
 
                 foreach (var path in pathsToTry)
                 {
-                    if (File.Exists(Path.Join(path, "FlightSimulator.CFG")) || File.Exists(Path.Join(path, "UserCfg.opt")))
+                    if (File.Exists(Path.Join(path, "FlightSimulator2024.CFG")) || File.Exists(Path.Join(path, "UserCfg.opt")))
                     {
                         return path;
                     }
                 }
 
                 var pathsTried = String.Join(", ", pathsToTry);
-                throw new Exception($"Could not locate main Flight Simulator path. Paths tried: {pathsTried}");
+                throw new Exception($"Could not locate main Flight Simulator 2024 path. Paths tried: {pathsTried}");
             }
         }
 
