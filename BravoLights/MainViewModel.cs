@@ -9,6 +9,7 @@ namespace BravoLights
     public class MainViewModel : ViewModelBase, ILightsState
     {
         private readonly ISet<string> litLights = new HashSet<string>();
+        private readonly ISet<string> testLightNames = new HashSet<string>();
 
         private Dictionary<string, LightExpression> lightExpressions = new();
 
@@ -81,13 +82,61 @@ namespace BravoLights
             set { SetProperty(ref simState, value); }
         }
 
+        private bool testMode;
+        private string testLightName;
+
+        public bool TestMode
+        {
+            get { return testMode; }
+            set
+            {
+                if (testMode == value) return;
+                testMode = value;
+                if (!testMode) testLightNames.Clear();
+                RaiseAllLightStatesChanged();
+            }
+        }
+
+        public void SetTestLight(string lightName, bool isOn)
+        {
+            var changed = isOn ? testLightNames.Add(lightName) : testLightNames.Remove(lightName);
+            if (changed && TestMode)
+            {
+                RaiseAllLightStatesChanged();
+            }
+        }
+
+        public void SetAllTestLights(bool isOn)
+        {
+            testLightNames.Clear();
+            if (isOn)
+            {
+                foreach (var lightName in LightNames.AllNames) testLightNames.Add(lightName);
+            }
+            if (TestMode) RaiseAllLightStatesChanged();
+        }
+
         public IEnumerable<string> LitLights
         {
-            get { return litLights; }
+            get
+            {
+                if (!TestMode) return litLights;
+                return testLightNames;
+            }
+        }
+
+        private void RaiseAllLightStatesChanged()
+        {
+            RaisePropertyChanged(nameof(LitLights));
+            foreach (var lightName in LightNames.AllNames)
+            {
+                RaisePropertyChanged(lightName);
+            }
         }
 
         public bool IsLit(string lightName)
         {
+            if (TestMode) return testLightNames.Contains(lightName);
             return litLights.Contains(lightName);
         }
         public bool HDG { get { return IsLit(LightNames.HDG); } }

@@ -117,7 +117,18 @@ namespace BravoLights.Common
             {
                 foreach (var light in lightsState.LitLights)
                 {
-                    var lightInfo = LightNames.LightInfos[light];
+                    if (string.IsNullOrWhiteSpace(light))
+                    {
+                        logger.Warn("Skipping empty light name in LitLights");
+                        continue;
+                    }
+
+                    if (!LightNames.LightInfos.TryGetValue(light, out var lightInfo))
+                    {
+                        logger.Warn("Unknown light name '{0}' in LitLights - skipping", light);
+                        continue;
+                    }
+
                     data[lightInfo.Byte] |= lightInfo.BitValue;
                 }
             }

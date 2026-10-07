@@ -23,6 +23,9 @@ namespace BravoLights.UI
         }
 
         private MainViewModel viewModel;
+        private bool updatingTestChecks;
+
+        public GlobalLightController LightController { get; set; }
 
         public MainViewModel ViewModel
         {
@@ -52,11 +55,101 @@ namespace BravoLights.UI
 
         private string monitoredLight = "";
 
-        private void Checkbox_Checked(object sender, RoutedEventArgs e)
-        {            
-            monitoredLight = ((Control)e.OriginalSource).Tag as string;
+        private void LightTestCheckBoxChanged(object sender, RoutedEventArgs e)
+        {
+            if (updatingTestChecks) return;
 
-            UpdateMonitor();
+            var checkBox = e.OriginalSource as CheckBox;
+            if (checkBox?.Tag is not string lightName) return;
+
+            if (TestModeToggle.IsChecked == true)
+            {
+                monitoredLight = lightName;
+                UpdateMonitor();
+                if (viewModel == null) return;
+                viewModel.SetTestLight(lightName, checkBox.IsChecked == true);
+            }
+            else
+            {
+                // Outside test mode, one checked box identifies the light being inspected.
+                monitoredLight = checkBox.IsChecked == true ? lightName : null;
+                SetMonitorCheckBoxOnly(monitoredLight);
+                UpdateMonitor();
+            }
+        }
+
+        private void TestMode_Changed(object sender, RoutedEventArgs e)
+        {
+            if (viewModel == null) return;
+
+            var enabled = TestModeToggle.IsChecked == true;
+            viewModel.TestMode = enabled;
+            if (enabled)
+            {
+                foreach (var checkBox in GetTestLightCheckBoxes(MonitorGrid))
+                {
+                    if (checkBox.IsChecked == true && checkBox.Tag is string lightName)
+                    {
+                        viewModel.SetTestLight(lightName, true);
+                    }
+                }
+            }
+            else
+            {
+                SetMonitorCheckBoxOnly(monitoredLight);
+            }
+            if (LightController != null)
+            {
+                LightController.TestMode = enabled;
+            }
+        }
+
+        private void AllLightsOff_Click(object sender, RoutedEventArgs e)
+        {
+            viewModel?.SetAllTestLights(false);
+            SetAllTestCheckBoxes(false);
+        }
+
+        private void AllLightsOn_Click(object sender, RoutedEventArgs e)
+        {
+            viewModel?.SetAllTestLights(true);
+            SetAllTestCheckBoxes(true);
+        }
+
+        private void SetAllTestCheckBoxes(bool isChecked)
+        {
+            updatingTestChecks = true;
+            foreach (var checkBox in GetTestLightCheckBoxes(MonitorGrid))
+            {
+                checkBox.IsChecked = isChecked;
+            }
+            updatingTestChecks = false;
+        }
+
+        private void SetMonitorCheckBoxOnly(string lightName)
+        {
+            updatingTestChecks = true;
+            foreach (var checkBox in GetTestLightCheckBoxes(MonitorGrid))
+            {
+                checkBox.IsChecked = string.Equals(checkBox.Tag as string, lightName, StringComparison.OrdinalIgnoreCase);
+            }
+            updatingTestChecks = false;
+        }
+
+        private static System.Collections.Generic.IEnumerable<CheckBox> GetTestLightCheckBoxes(DependencyObject parent)
+        {
+            for (var i = 0; i < System.Windows.Media.VisualTreeHelper.GetChildrenCount(parent); i++)
+            {
+                var child = System.Windows.Media.VisualTreeHelper.GetChild(parent, i);
+                if (child is CheckBox checkBox && checkBox.Tag is string)
+                {
+                    yield return checkBox;
+                }
+                foreach (var nested in GetTestLightCheckBoxes(child))
+                {
+                    yield return nested;
+                }
+            }
         }
 
         private readonly ExpressionAndVariablesViewModel eavVM = new();
@@ -74,6 +167,9 @@ namespace BravoLights.UI
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
+            // Test output should never remain active after the Monitor is hidden.
+            TestModeToggle.IsChecked = false;
+
             // Hide instead of close
             e.Cancel = true;
             Hide();
@@ -83,7 +179,7 @@ namespace BravoLights.UI
         }
     }
 
-    class CombinedDataContext
+    class CombinedDataContext : ViewModelBase
     {
         private MainViewModel mainState;
         public MainViewModel MainState
@@ -98,6 +194,13 @@ namespace BravoLights.UI
         {
             get { return eavVM; }
             set { eavVM = value; }
+        }
+
+        private int textSize = 12;
+        public int TextSize
+        {
+            get { return textSize; }
+            set { SetProperty(ref textSize, value); }
         }
     }
 

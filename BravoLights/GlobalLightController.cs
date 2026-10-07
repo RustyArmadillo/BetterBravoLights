@@ -26,12 +26,15 @@ namespace BravoLights
         private bool simulatorConnected;
         public bool SimulatorConnected { get => simulatorConnected; set { simulatorConnected = value; Check(); } }
 
+        private bool testMode;
+        public bool TestMode { get => testMode; set { testMode = value; Check(); } }
+
         private void Check()
         {
-            logger.Debug("SimulatorInMainMenu={0}, ReadingConfiguration={1}, ApplicationExiting={2}, SimulatorConnected={3}",
-                SimulatorInMainMenu, ReadingConfiguration, ApplicationExiting, SimulatorConnected);
+            logger.Debug("SimulatorInMainMenu={0}, ReadingConfiguration={1}, ApplicationExiting={2}, SimulatorConnected={3}, TestMode={4}",
+                SimulatorInMainMenu, ReadingConfiguration, ApplicationExiting, SimulatorConnected, TestMode);
 
-            var lightsShouldBeOn = !SimulatorInMainMenu && !ReadingConfiguration && !ApplicationExiting && SimulatorConnected;
+            var lightsShouldBeOn = !ReadingConfiguration && !ApplicationExiting && (TestMode || (!SimulatorInMainMenu && SimulatorConnected));
             usbLogic.LightsEnabled = lightsShouldBeOn;
         }
     }

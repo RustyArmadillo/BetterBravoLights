@@ -14,6 +14,12 @@ namespace DCSBravoLights
 
         public void SetLight(string lightName, bool lit)
         {
+            // Ignore empty or whitespace light names - they are invalid and cause KeyNotFoundException downstream.
+            if (string.IsNullOrWhiteSpace(lightName))
+            {
+                return;
+            }
+
             bool changed;
             if (lit)
             {

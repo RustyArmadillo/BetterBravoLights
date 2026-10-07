@@ -5,14 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BravoLights.UI"
         mc:Ignorable="d"
-        Title="Better Bravo Lights - Installation Aborted" Height="420" Width="540"
+        Title="Better Bravo Lights - Installation Aborted" MinHeight="300" Width="540"
+        SizeToContent="Height" MaxHeight="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}"
         WindowStartupLocation="CenterScreen"
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
-    <DockPanel>
+    <DockPanel LastChildFill="True">
         <StackPanel DockPanel.Dock="Bottom" VerticalAlignment="Bottom" Margin="8">
             <Button HorizontalAlignment="Right" Height="Auto" Padding="8" Click="Button_Click">OK</Button>
         </StackPanel>
-        <StackPanel DockPanel.Dock="Top" Margin="16" Hyperlink.RequestNavigate="Hyperlink_RequestNavigate">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+          <StackPanel Margin="16" Hyperlink.RequestNavigate="Hyperlink_RequestNavigate">
             <TextBlock TextWrapping="Wrap">We've found an existing problem with one of your Flight Simulator configuration files.</TextBlock>
         
             <TextBlock Margin="0,8" TextWrapping="Wrap">In order to install Better Bravo Lights we would need to modify that file, but because it's already corrupted we can't safely do that.
@@ -35,6 +37,7 @@
                 the entire issue for you, complete with the error details and contents of your file.
             </TextBlock>
 
-        </StackPanel>
+          </StackPanel>
+        </ScrollViewer>
     </DockPanel>
 </Window>

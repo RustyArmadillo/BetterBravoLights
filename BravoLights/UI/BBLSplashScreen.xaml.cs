@@ -10,9 +10,9 @@ namespace BravoLights.UI
     /// </summary>
     public partial class BBLSplashScreen : Window
     {
-        private const int NewCheckTimeoutMillis = 5000;
+        private const int NewCheckTimeoutMillis = 1500;
         private const int MinimumSplashShowMillis = 1500;
-        private const int MinimumNewVersionShowMillis = 20000;
+        private const int MinimumNewVersionShowMillis = 1500;
 
         private DateTime showStart;
 

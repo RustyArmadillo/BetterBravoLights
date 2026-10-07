@@ -7,7 +7,9 @@
         d:DataContext="{d:DesignInstance Type=local:CombinedDataContext}"
         mc:Ignorable="d"
         Height="420" Width="700"
-        MinHeight="420" MinWidth="700"
+        MinHeight="420" MinWidth="700" SizeToContent="Height"
+        MaxHeight="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}"
+        FontSize="{Binding TextSize}"
         Closing="Window_Closing"
         Topmost="True">
     <Window.Resources>
@@ -15,15 +17,16 @@
         <local:MultiBrushConverter x:Key="multiBrushConverter" />
     </Window.Resources>
 
-    <Grid RadioButton.Checked="Checkbox_Checked">
+    <Grid x:Name="MonitorGrid" CheckBox.Checked="LightTestCheckBoxChanged" CheckBox.Unchecked="LightTestCheckBoxChanged">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="132" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="32" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
 
         </Grid.RowDefinitions>
@@ -51,49 +54,49 @@
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition MinHeight="36" MaxHeight="36" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <RadioButton Grid.Row="0" Grid.Column="0" GroupName="Monitor" Tag="HDG">
-                <RadioButton.Content>
+            <CheckBox Grid.Row="0" Grid.Column="0"  Tag="HDG">
+                <CheckBox.Content>
                     <TextBlock Text="HDG" TextWrapping="WrapWithOverflow" Foreground="{Binding Path=MainState.HDG, Converter={StaticResource brushConverter}}" />
-                </RadioButton.Content>
-            </RadioButton>
-            <RadioButton Grid.Row="0" Grid.Column="1" GroupName="Monitor" Tag="NAV">
-                <RadioButton.Content>
+                </CheckBox.Content>
+            </CheckBox>
+            <CheckBox Grid.Row="0" Grid.Column="1"  Tag="NAV">
+                <CheckBox.Content>
                     <TextBlock Text="NAV" TextWrapping="WrapWithOverflow" Foreground="{Binding Path=MainState.NAV, Converter={StaticResource brushConverter}}" />
-                </RadioButton.Content>
-            </RadioButton>
-            <RadioButton Grid.Row="0" Grid.Column="2" GroupName="Monitor" Tag="APR">
-                <RadioButton.Content>
+                </CheckBox.Content>
+            </CheckBox>
+            <CheckBox Grid.Row="0" Grid.Column="2"  Tag="APR">
+                <CheckBox.Content>
                     <TextBlock Text="APR" TextWrapping="WrapWithOverflow" Foreground="{Binding Path=MainState.APR, Converter={StaticResource brushConverter}}" />
-                </RadioButton.Content>
-            </RadioButton>
-            <RadioButton Grid.Row="0" Grid.Column="3" GroupName="Monitor" Tag="REV">
-                <RadioButton.Content>
+                </CheckBox.Content>
+            </CheckBox>
+            <CheckBox Grid.Row="0" Grid.Column="3"  Tag="REV">
+                <CheckBox.Content>
                     <TextBlock Text="REV" TextWrapping="WrapWithOverflow" Foreground="{Binding Path=MainState.REV, Converter={StaticResource brushConverter}}"/>
-                </RadioButton.Content>
-            </RadioButton>
-            <RadioButton Grid.Row="0" Grid.Column="4" GroupName="Monitor" Tag="ALT">
-                <RadioButton.Content>
+                </CheckBox.Content>
+            </CheckBox>
+            <CheckBox Grid.Row="0" Grid.Column="4"  Tag="ALT">
+                <CheckBox.Content>
                     <TextBlock Text="ALT" TextWrapping="WrapWithOverflow" Foreground="{Binding Path=MainState.ALT, Converter={StaticResource brushConverter}}" />
-                </RadioButton.Content>
-            </RadioButton>
-            <RadioButton Grid.Row="0" Grid.Column="5" GroupName="Monitor" Tag="VS">
-                <RadioButton.Content>
+                </CheckBox.Content>
+            </CheckBox>
+            <CheckBox Grid.Row="0" Grid.Column="5"  Tag="VS">
+                <CheckBox.Content>
                     <TextBlock Text="VS" TextWrapping="WrapWithOverflow" Foreground="{Binding Path=MainState.VS, Converter={StaticResource brushConverter}}" />
-                </RadioButton.Content>
-            </RadioButton>
-            <RadioButton Grid.Row="0" Grid.Column="6" GroupName="Monitor" Tag="IAS">
-                <RadioButton.Content>
+                </CheckBox.Content>
+            </CheckBox>
+            <CheckBox Grid.Row="0" Grid.Column="6"  Tag="IAS">
+                <CheckBox.Content>
                     <TextBlock Text="IAS" TextWrapping="WrapWithOverflow" Foreground="{Binding Path=MainState.IAS, Converter={StaticResource brushConverter}}" />
-                </RadioButton.Content>
-            </RadioButton>
-            <RadioButton Grid.Row="0" Grid.Column="7" GroupName="Monitor" Tag="AUTOPILOT">
-                <RadioButton.Content>
+                </CheckBox.Content>
+            </CheckBox>
+            <CheckBox Grid.Row="0" Grid.Column="7"  Tag="AUTOPILOT">
+                <CheckBox.Content>
                     <TextBlock Text="AUTO PILOT" TextWrapping="WrapWithOverflow" Foreground="{Binding Path=MainState.AUTOPILOT, Converter={StaticResource brushConverter}}" />
-                </RadioButton.Content>
-            </RadioButton>
+                </CheckBox.Content>
+            </CheckBox>
         </Grid>
 
         <Grid Grid.Row="2" Grid.Column="1" Margin="8,0,0,0">
@@ -107,87 +110,87 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition MinHeight="36" MaxHeight="36" />
-                <RowDefinition MinHeight="36" MaxHeight="36"/>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <RadioButton Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch" GroupName="Monitor" Tag="MasterWarning">
-                <RadioButton.Content>
+            <CheckBox Grid.Row="0" Grid.Column="0" HorizontalAlignment="Stretch"  Tag="MasterWarning">
+                <CheckBox.Content>
                     <TextBlock Text="MASTER WARNING" TextWrapping="WrapWithOverflow" Foreground="{Binding Path=MainState.MasterWarning, Converter={StaticResource brushConverter}}" />
-                </RadioButton.Content>
-            </RadioButton>
-            <RadioButton Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" GroupName="Monitor" Tag="EngineFire">
-                <RadioButton.Content>
+                </CheckBox.Content>
+            </CheckBox>
+            <CheckBox Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch"  Tag="EngineFire">
+                <CheckBox.Content>
                     <TextBlock Text="ENGINE FIRE" TextWrapping="WrapWithOverflow" Foreground="{Binding Path=MainState.EngineFire, Converter={StaticResource brushConverter}}" />
-                </RadioButton.Content>
-            </RadioButton>
-            <RadioButton Grid.Row="0" Grid.Column="2" HorizontalAlignment="Stretch" GroupName="Monitor" Tag="LowOilPressure">
-                <RadioButton.Content>
+                </CheckBox.Content>
+            </CheckBox>
+            <CheckBox Grid.Row="0" Grid.Column="2" HorizontalAlignment="Stretch"  Tag="LowOilPressure">
+                <CheckBox.Content>
                     <TextBlock Text="LOW OIL PRESSURE" TextWrapping="WrapWithOverflow" Foreground="{Binding Path=MainState.LowOilPressure, Converter={StaticResource brushConverter}}" />
-                </RadioButton.Content>
-            </RadioButton>
-            <RadioButton Grid.Row="0" Grid.Column="3" HorizontalAlignment="Stretch" GroupName="Monitor" Tag="LowFuelPressure">
-                <RadioButton.Content>
+                </CheckBox.Content>
+            </CheckBox>
+            <CheckBox Grid.Row="0" Grid.Column="3" HorizontalAlignment="Stretch"  Tag="LowFuelPressure">
+                <CheckBox.Content>
                     <TextBlock Text="LOW FUEL PRESSURE" TextWrapping="WrapWithOverflow"  Foreground="{Binding Path=MainState.LowFuelPressure, Converter={StaticResource brushConverter}}"/>
-                </RadioButton.Content>
-            </RadioButton>
-            <RadioButton Grid.Row="0" Grid.Column="4" HorizontalAlignment="Stretch" GroupName="Monitor" Tag="AntiIce">
-                <RadioButton.Content>
+                </CheckBox.Content>
+            </CheckBox>
+            <CheckBox Grid.Row="0" Grid.Column="4" HorizontalAlignment="Stretch"  Tag="AntiIce">
+                <CheckBox.Content>
                     <TextBlock Text="ANTI ICE" TextWrapping="WrapWithOverflow" Foreground="{Binding Path=MainState.AntiIce, Converter={StaticResource brushConverter}}" />
-                </RadioButton.Content>
-            </RadioButton>
-            <RadioButton Grid.Row="0" Grid.Column="5" HorizontalAlignment="Stretch" GroupName="Monitor" Tag="StarterEngaged">
-                <RadioButton.Content>
+                </CheckBox.Content>
+            </CheckBox>
+            <CheckBox Grid.Row="0" Grid.Column="5" HorizontalAlignment="Stretch"  Tag="StarterEngaged">
+                <CheckBox.Content>
                     <TextBlock Text="STARTER ENGAGED" TextWrapping="WrapWithOverflow" Foreground="{Binding Path=MainState.StarterEngaged, Converter={StaticResource brushConverter}}" />
-                </RadioButton.Content>
-            </RadioButton>
-            <RadioButton Grid.Row="0" Grid.Column="6" HorizontalAlignment="Stretch" GroupName="Monitor" Tag="APU">
-                <RadioButton.Content>
+                </CheckBox.Content>
+            </CheckBox>
+            <CheckBox Grid.Row="0" Grid.Column="6" HorizontalAlignment="Stretch"  Tag="APU">
+                <CheckBox.Content>
                     <TextBlock Text="APU" TextWrapping="WrapWithOverflow" Foreground="{Binding Path=MainState.APU, Converter={StaticResource brushConverter}}" />
-                </RadioButton.Content>
-            </RadioButton>
+                </CheckBox.Content>
+            </CheckBox>
 
-            <RadioButton Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch" GroupName="Monitor" Tag="MasterCaution">
-                <RadioButton.Content>
+            <CheckBox Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch"  Tag="MasterCaution">
+                <CheckBox.Content>
                     <TextBlock Text="MASTER CAUTION" TextWrapping="WrapWithOverflow" Foreground="{Binding Path=MainState.MasterCaution, Converter={StaticResource brushConverter}}" />
-                </RadioButton.Content>
-            </RadioButton>
-            <RadioButton Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" GroupName="Monitor" Tag="Vacuum">
-                <RadioButton.Content>
+                </CheckBox.Content>
+            </CheckBox>
+            <CheckBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch"  Tag="Vacuum">
+                <CheckBox.Content>
                     <TextBlock Text="VACUUM" TextWrapping="WrapWithOverflow" Foreground="{Binding Path=MainState.Vacuum, Converter={StaticResource brushConverter}}" />
-                </RadioButton.Content>
-            </RadioButton>
-            <RadioButton Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch" GroupName="Monitor" Tag="LowHydPressure">
-                <RadioButton.Content>
+                </CheckBox.Content>
+            </CheckBox>
+            <CheckBox Grid.Row="1" Grid.Column="2" HorizontalAlignment="Stretch"  Tag="LowHydPressure">
+                <CheckBox.Content>
                     <TextBlock Text="LOW HYD PRESSURE" TextWrapping="WrapWithOverflow" Foreground="{Binding Path=MainState.LowHydPressure, Converter={StaticResource brushConverter}}" />
-                </RadioButton.Content>
-            </RadioButton>
-            <RadioButton Grid.Row="1" Grid.Column="3" HorizontalAlignment="Stretch" GroupName="Monitor" Tag="AuxFuelPump">
-                <RadioButton.Content>
+                </CheckBox.Content>
+            </CheckBox>
+            <CheckBox Grid.Row="1" Grid.Column="3" HorizontalAlignment="Stretch"  Tag="AuxFuelPump">
+                <CheckBox.Content>
                     <TextBlock Text="AUX FUEL PUMP" TextWrapping="WrapWithOverflow" Foreground="{Binding Path=MainState.AuxFuelPump, Converter={StaticResource brushConverter}}" />
-                </RadioButton.Content>
-            </RadioButton>
-            <RadioButton Grid.Row="1" Grid.Column="4" HorizontalAlignment="Stretch" GroupName="Monitor" Tag="ParkingBrake">
-                <RadioButton.Content>
+                </CheckBox.Content>
+            </CheckBox>
+            <CheckBox Grid.Row="1" Grid.Column="4" HorizontalAlignment="Stretch"  Tag="ParkingBrake">
+                <CheckBox.Content>
                     <TextBlock Text="PARKING BRAKE" TextWrapping="WrapWithOverflow" Foreground="{Binding Path=MainState.ParkingBrake, Converter={StaticResource brushConverter}}" />
-                </RadioButton.Content>
-            </RadioButton>
-            <RadioButton Grid.Row="1" Grid.Column="5" HorizontalAlignment="Stretch" GroupName="Monitor" Tag="LowVolts">
-                <RadioButton.Content>
+                </CheckBox.Content>
+            </CheckBox>
+            <CheckBox Grid.Row="1" Grid.Column="5" HorizontalAlignment="Stretch"  Tag="LowVolts">
+                <CheckBox.Content>
                     <TextBlock Text="LOW VOLTS" TextWrapping="WrapWithOverflow" Foreground="{Binding Path=MainState.LowVolts, Converter={StaticResource brushConverter}}" />
-                </RadioButton.Content>
-            </RadioButton>
-            <RadioButton Grid.Row="1" Grid.Column="6" HorizontalAlignment="Stretch" GroupName="Monitor" Tag="Door">
-                <RadioButton.Content>
+                </CheckBox.Content>
+            </CheckBox>
+            <CheckBox Grid.Row="1" Grid.Column="6" HorizontalAlignment="Stretch"  Tag="Door">
+                <CheckBox.Content>
                     <TextBlock Text="DOOR" TextWrapping="WrapWithOverflow" Foreground="{Binding Path=MainState.Door, Converter={StaticResource brushConverter}}" />
-                </RadioButton.Content>
-            </RadioButton>
+                </CheckBox.Content>
+            </CheckBox>
         </Grid>
-        <Grid Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Center" Margin="0,4,0,0" Height="60" VerticalAlignment="Top">
+        <Grid Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Center" Margin="0,4,0,0" VerticalAlignment="Top">
             <Grid.RowDefinitions>
-                <RowDefinition Height="20" />
-                <RowDefinition Height="20" />
-                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <TextBlock Text="Gear N">
@@ -198,22 +201,22 @@
                     </MultiBinding>
                 </TextBlock.Foreground>
             </TextBlock>
-            <RadioButton Grid.Row="1" GroupName="Monitor" Tag="GearCRed">
-                <RadioButton.Content>
+            <CheckBox Grid.Row="1"  Tag="GearCRed">
+                <CheckBox.Content>
                     <TextBlock>Red</TextBlock>
-                </RadioButton.Content>
-            </RadioButton>
-            <RadioButton Grid.Row="2" GroupName="Monitor" Tag="GearCGreen">
-                <RadioButton.Content>
+                </CheckBox.Content>
+            </CheckBox>
+            <CheckBox Grid.Row="2"  Tag="GearCGreen">
+                <CheckBox.Content>
                     <TextBlock>Green</TextBlock>
-                </RadioButton.Content>
-            </RadioButton>
+                </CheckBox.Content>
+            </CheckBox>
         </Grid>
-        <Grid Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Left" Width="66" Height="60" VerticalAlignment="Top" Margin="8,65,0,0">
+        <Grid Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Left" Width="80" VerticalAlignment="Top" Margin="8,65,0,0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="20" />
-                <RowDefinition Height="20" />
-                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <TextBlock Text="Gear L">
@@ -225,23 +228,23 @@
                 </TextBlock.Foreground>
             </TextBlock>
 
-            <RadioButton Grid.Row="1" GroupName="Monitor" Tag="GearLRed">
-                <RadioButton.Content>
+            <CheckBox Grid.Row="1"  Tag="GearLRed">
+                <CheckBox.Content>
                     <TextBlock>Red</TextBlock>
-                </RadioButton.Content>
-            </RadioButton>
-            <RadioButton Grid.Row="2" GroupName="Monitor" Tag="GearLGreen">
-                <RadioButton.Content>
+                </CheckBox.Content>
+            </CheckBox>
+            <CheckBox Grid.Row="2"  Tag="GearLGreen">
+                <CheckBox.Content>
                     <TextBlock>Green</TextBlock>
-                </RadioButton.Content>
-            </RadioButton>
+                </CheckBox.Content>
+            </CheckBox>
         </Grid>
 
-        <Grid Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Right" Width="66" Height="60" VerticalAlignment="Top" Margin="0,65,8,0">
+        <Grid Grid.Row="1" Grid.RowSpan="2" HorizontalAlignment="Right" Width="80" VerticalAlignment="Top" Margin="0,65,8,0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="20" />
-                <RowDefinition Height="20" />
-                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
             <TextBlock HorizontalAlignment="Right" Text="Gear R">
@@ -253,17 +256,38 @@
                 </TextBlock.Foreground>
             </TextBlock>
 
-            <RadioButton Grid.Row="1" HorizontalAlignment="Right" GroupName="Monitor" Tag="GearRRed">
-                <RadioButton.Content>
+            <CheckBox Grid.Row="1" HorizontalAlignment="Right"  Tag="GearRRed">
+                <CheckBox.Content>
                     <TextBlock>Red</TextBlock>
-                </RadioButton.Content>
-            </RadioButton>
-            <RadioButton Grid.Row="2" HorizontalAlignment="Right" GroupName="Monitor" Tag="GearRGreen">
-                <RadioButton.Content>
+                </CheckBox.Content>
+            </CheckBox>
+            <CheckBox Grid.Row="2" HorizontalAlignment="Right"  Tag="GearRGreen">
+                <CheckBox.Content>
                     <TextBlock>Green</TextBlock>
-                </RadioButton.Content>
-            </RadioButton>
+                </CheckBox.Content>
+            </CheckBox>
         </Grid>
         <local:ExpressionAndVariables Grid.Row="3" Grid.ColumnSpan="2" Margin="8" DataContext="{Binding Path=ExpressionAndVariablesViewModel}" />
+        <Grid Grid.Row="4" Grid.ColumnSpan="2" Margin="8,4,8,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <CheckBox x:Name="TestModeToggle" Content="Bravo test mode" ToolTip="Select any combination of lights to test. Outside test mode, one check marks the light being monitored."
+                          VerticalAlignment="Center"
+                          Checked="TestMode_Changed" Unchecked="TestMode_Changed" />
+                <Button Margin="8,0,0,0" Padding="6,2" Content="All On" Click="AllLightsOn_Click"
+                        IsEnabled="{Binding IsChecked, ElementName=TestModeToggle}" />
+                <Button Margin="4,0,0,0" Padding="6,2" Content="All Off" Click="AllLightsOff_Click"
+                        IsEnabled="{Binding IsChecked, ElementName=TestModeToggle}" />
+            </StackPanel>
+            <DockPanel Grid.Column="1" LastChildFill="False" HorizontalAlignment="Right">
+                <TextBlock Text="Text size:" VerticalAlignment="Center" Margin="0,0,6,0" />
+                <TextBlock Text="{Binding TextSize}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                <Slider Width="120" Minimum="8" Maximum="24" TickFrequency="1" IsSnapToTickEnabled="True"
+                        Value="{Binding TextSize, Mode=TwoWay}" VerticalAlignment="Center" />
+            </DockPanel>
+        </Grid>
     </Grid>
 </Window>

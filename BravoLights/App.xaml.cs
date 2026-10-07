@@ -157,42 +157,6 @@ namespace BravoLights
                 }
             }
 
-            var includedWasmVersion = Installer.IncludedWasmModuleVersion;
-            var installedWasmVersion = Installer.InstalledWasmModuleVersion;
-
-            logger.Debug("Installed WASM {0}, included WASM {1}", installedWasmVersion, includedWasmVersion);
-
-            if (installedWasmVersion != includedWasmVersion)
-            {
-                var doInstall = false;
-
-                if (installedWasmVersion == null)
-                {
-                    if (MessageBox.Show("Lights that use L: variables will not work correctly unless the Better Bravo Lights WASM module is installed in the Flight Simulator Community folder. Would you like it to be installed?",
-                        "Better Bravo Lights", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                    {
-                        doInstall = true;
-                    }
-                }
-                else
-                {
-                    if (MessageBox.Show("Lights that use L: variables will not work correctly unless the correct version of the Better Bravo Lights WASM module is installed in the Flight Simulator Community folder. Would you like the correct version to be installed?",
-                        "Better Bravo Lights", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                    {
-                        doInstall = true;
-                    }
-                }
-                if (doInstall)
-                {
-                    Installer.InstallWasmModule();
-                    MessageBox.Show("The Better Bravo Lights WASM module is now installed. If Flight Simulator was already running it will need to be restarted.", "Better Bravo Lights", MessageBoxButton.OK);
-                }
-                else
-                {
-                    LVarManager.Connection.DisableLVars = true;
-                }
-            }
-
             viewModel = new MainViewModel();
             usbLogic = new UsbLogic(viewModel);
             usbLogic.PropertyChanged += delegate (object sender, PropertyChangedEventArgs e)
@@ -213,7 +177,8 @@ namespace BravoLights
 
             lightsWindow = new LightsWindow
             {
-                ViewModel = viewModel
+                ViewModel = viewModel,
+                LightController = globalLightController
             };
 
             // How can we get an HWnd without having to (briefly) show the lights window?

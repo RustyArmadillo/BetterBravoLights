@@ -153,13 +153,8 @@ namespace BravoLights.Installation
                 message.AppendLine("Better Bravo Lights will now automatically start up with MSFS instead of the AFCBridge.");
             }
 
-            InstallWasmModule();
-
             message.AppendLine();
             message.AppendLine($"Better Bravo Lights will run from {FlightSimulatorPaths.BetterBravoLightsPath}");
-
-            message.AppendLine();
-            message.AppendLine($"WASM module installed to {FlightSimulatorPaths.InstalledWasmModulePath}");
 
             if (new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator))
             {
@@ -203,13 +198,6 @@ namespace BravoLights.Installation
             else
             {
                 message.AppendLine("Better Bravo Lights will no longer start up with MSFS. AFCBridge will now be used instead.");
-            }
-
-            if (InstalledWasmModuleVersion != null)
-            {
-                UninstallWasmModule();
-                message.AppendLine();
-                message.AppendLine($"WASM module uninstalled from {FlightSimulatorPaths.InstalledWasmModulePath}");
             }
 
             return message.ToString();
@@ -257,12 +245,7 @@ namespace BravoLights.Installation
         {
             get
             {
-                var version = GetWasmModuleVersion(FlightSimulatorPaths.IncludedWasmModulePath);
-                if (version == null)
-                {
-                    throw new Exception("Missing included WASM module");
-                }
-                return version;
+                return GetWasmModuleVersion(FlightSimulatorPaths.IncludedWasmModulePath);
             }
         }
 

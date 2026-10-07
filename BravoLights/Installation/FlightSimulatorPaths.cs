@@ -15,15 +15,15 @@ namespace BravoLights.Installation
             get
             {
                 var localAppData = (UnitTestRoot == null) ? Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) : Path.Join(UnitTestRoot, "LOCALAPPDATA");
-                var windowsStoreLocation = Path.Join(localAppData, "Packages", "Microsoft.Limitless_8wekyb3d8bbwe", "LocalCache");
-
                 var appData = (UnitTestRoot == null) ? Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) : Path.Join(UnitTestRoot, "APPDATA");
-                var steamLocation = Path.Join(appData, "Microsoft Flight Simulator 2024");
-
+                // Prefer 2024 when both simulator versions are installed. Their user-data
+                // locations use different package IDs/folder names from MSFS 2020.
                 var pathsToTry = new[]
                 {
-                    windowsStoreLocation,
-                    steamLocation
+                    Path.Join(localAppData, "Packages", "Microsoft.Limitless_8wekyb3d8bbwe", "LocalCache"),
+                    Path.Join(appData, "Microsoft Flight Simulator 2024"),
+                    Path.Join(localAppData, "Packages", "Microsoft.FlightSimulator_8wekyb3d8bbwe", "LocalCache"),
+                    Path.Join(appData, "Microsoft Flight Simulator")
                 };
 
                 foreach (var path in pathsToTry)

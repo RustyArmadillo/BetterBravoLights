@@ -11,9 +11,9 @@ namespace BravoLights.Tests
     {
         private static void SetupLVarManager()
         {
-            var mockWasmChannel = new Mock<IWASMChannel>();
-            mockWasmChannel.SetupGet(c => c.SimState).Returns(SimState.SimRunning);
-            LVarManager.Connection.SetWASMChannel(mockWasmChannel.Object);
+            var mockLVarChannel = new Mock<ILVarChannel>();
+            mockLVarChannel.SetupGet(c => c.SimState).Returns(SimState.SimRunning);
+            LVarManager.Connection.SetLVarChannel(mockLVarChannel.Object);
         }
 
         [Fact]
