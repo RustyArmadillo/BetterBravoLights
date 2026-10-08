@@ -134,7 +134,7 @@
     <value>{0} - Connected to simulator</value>
   </data>
   <data name="TrayIconMenuDebugger" xml:space="preserve">
-    <value>Debugger</value>
+    <value>Lights Monitor</value>
   </data>
   <data name="TrayIconMenuExit" xml:space="preserve">
     <value>Exit</value>
