@@ -37,7 +37,16 @@ namespace BravoLights.UI
         private async void CheckForNewVersion()
         {
             newVersionCheckTimeout.Start();
-            var latestVersion = await ProgramInfo.GetLatestVersionStringAsync();
+            string latestVersion;
+            try
+            {
+                latestVersion = await ProgramInfo.GetLatestVersionStringAsync();
+            }
+            catch
+            {
+                // The app should still start if GitHub is unavailable or the release response is invalid.
+                return;
+            }
             if (this.Visibility != Visibility.Visible)
             {
                 // Already hidden.
@@ -45,7 +54,7 @@ namespace BravoLights.UI
             }
             newVersionCheckTimeout.Stop();
 
-            if (latestVersion == ProgramInfo.VersionString)
+            if (new Version(latestVersion) <= new Version(ProgramInfo.VersionString))
             {
                 // We have the latest version. Let's make sure the splash screen shows for our minimum time
                 var remainingMinimumTime = MinimumSplashShowMillis - DateTime.UtcNow.Subtract(showStart).TotalMilliseconds;

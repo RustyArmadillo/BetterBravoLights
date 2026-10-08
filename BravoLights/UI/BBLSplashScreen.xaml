@@ -28,7 +28,7 @@
             <TextBlock FontSize="36" FontFamily="Gill Sans MT" TextWrapping="Wrap" Text="{Binding ProductAndVersion}" />
             <TextBlock Grid.Row="1" Margin="0,8,0,0" TextWrapping="Wrap">by Royston Shufflebotham &lt;royston@shufflebotham.org&gt;</TextBlock>
             <TextBlock Grid.Row="2" Margin="0,8,0,0" HorizontalAlignment="Center">
-                <Hyperlink x:Name="NewVersionLink" NavigateUri="https://flightsim.to/file/21253/better-bravo-lights" Foreground="Red" RequestNavigate="NewVersionLink_RequestNavigate">
+                <Hyperlink x:Name="NewVersionLink" NavigateUri="https://github.com/RoystonS/BetterBravoLights/releases/latest" Foreground="Red" RequestNavigate="NewVersionLink_RequestNavigate">
                     <TextBlock x:Name="NewVersionLinkText" FontSize="18" />
                 </Hyperlink>
             </TextBlock>

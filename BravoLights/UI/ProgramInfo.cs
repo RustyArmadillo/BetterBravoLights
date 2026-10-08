@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.IO;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -9,6 +10,10 @@ namespace BravoLights.UI
 {
     public class ProgramInfo
     {
+        private const string ReleasesApiUrl = "https://api.github.com/repos/RoystonS/BetterBravoLights/releases";
+        private static readonly HttpClient httpClient = new HttpClient();
+        private static readonly Lazy<Task<string>> cachedLatestVersionFetch = new Lazy<Task<string>>(FetchLatestVersionStringAsync);
+
         public static string ProductNameAndVersion
         {
             get
@@ -27,12 +32,11 @@ namespace BravoLights.UI
 
         private static async Task<string> FetchLatestVersionStringAsync()
         {
-            var client = new HttpClient();
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
-            client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("RoystonS-BetterBravoLights", VersionString));
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
+            httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("RoystonS-BetterBravoLights", VersionString));
 
             // We're not going to bother paging so we'll assume that the latest version is somewhere in the first page.
-            var response = await client.GetStringAsync("https://api.github.com/repos/RoystonS/BetterBravoLights/releases");
+            var response = await httpClient.GetStringAsync(ReleasesApiUrl);
             return ExtractLatestVersionFromGitHubReleasesJson(response);
         }
 
@@ -45,9 +49,26 @@ namespace BravoLights.UI
             {
                 try
                 {
-                    // v0.6.0
-                    var releaseName = releaseEntry.GetProperty("name").GetString();
-                    var versionString = releaseName[1..];
+                    if (releaseEntry.GetProperty("draft").GetBoolean())
+                    {
+                        continue;
+                    }
+
+                    // GitHub tags are normally formatted as v0.6.0; accept tags without the prefix too.
+                    var versionString = releaseEntry.GetProperty("tag_name").GetString();
+                    if (string.IsNullOrWhiteSpace(versionString))
+                    {
+                        versionString = releaseEntry.GetProperty("name").GetString();
+                    }
+                    versionString = versionString?.Trim();
+                    if (versionString != null && versionString.StartsWith("v", StringComparison.OrdinalIgnoreCase))
+                    {
+                        versionString = versionString[1..];
+                    }
+                    if (string.IsNullOrWhiteSpace(versionString))
+                    {
+                        continue;
+                    }
                     var version = new Version(versionString);
                     if (latestVersion == null || version.CompareTo(latestVersion) > 0)
                     {
@@ -59,19 +80,17 @@ namespace BravoLights.UI
                 }
             }
 
+            if (latestVersion == null)
+            {
+                throw new InvalidDataException("GitHub returned no releases with valid version tags.");
+            }
+
             return latestVersion.ToString();
         }
 
-        private static Task<string> cachedLatestVersionFetch;
-
         public static Task<string> GetLatestVersionStringAsync()
         {
-            if (cachedLatestVersionFetch == null)
-            {
-                cachedLatestVersionFetch = FetchLatestVersionStringAsync();
-            }
-
-            return cachedLatestVersionFetch;
+            return cachedLatestVersionFetch.Value;
         }
 
         public static async Task<bool> IsNewVersionAvailableAsync()
@@ -79,7 +98,7 @@ namespace BravoLights.UI
             try
             {
                 var latestVersion = await GetLatestVersionStringAsync();
-                return latestVersion != VersionString;
+                return new Version(latestVersion) > new Version(VersionString);
             } catch
             {
                 return false;
